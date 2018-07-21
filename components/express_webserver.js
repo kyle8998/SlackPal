@@ -11,6 +11,10 @@ module.exports = function(controller) {
 
     webserver.use(express.static('public'));
 
+    // app.get('/', function(request, response) {
+    //   doTheWork();
+    //   response.send('The work has begun!');
+    // });
 
     webserver.listen(process.env.PORT || 3000, null, function() {
 

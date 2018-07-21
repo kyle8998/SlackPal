@@ -1,6 +1,9 @@
 var env = require('node-env-file');
 env(__dirname + '/.env');
 
+const { WebClient } = require('@slack/client');
+const web = new WebClient(process.env.SLACK_ACCESS);
+
 
 if (!process.env.SLACK_CLIENT_ID || !process.env.SLACK_CLIENT_SECRET|| !process.env.PORT) {
   console.log('Error: Specify clientId clientSecret and PORT in environment');
@@ -17,6 +20,10 @@ var bot_options = {
     // debug: true,
     scopes: ['bot']
 };
+console.log(process.env.SLACK_CLIENT_ID)
+console.log(process.env.SLACK_CLIENT_SECRET)
+console.log(web.users.list)
+
 
 bot_options.json_file_store = __dirname + '/.data/db/'; // store user data in a simple JSON format
 
@@ -39,3 +46,31 @@ var normalizedPath = require("path").join(__dirname, "skills");
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   require("./skills/" + file)(controller);
 });
+
+module.exports =
+    {
+        getusers: function (conversationId) {
+            let users = [];
+            const limit = 200;
+
+            return new Promise((resolve, reject) => {
+              const pageLoaded = (res) => {
+                users = users.concat(res.members);
+
+                if (res.response_metadata && res.response_metadata.next_cursor) {
+                  web.conversations.members({ channel: conversationId, limit, cursor: res.response_metadata.next_cursor })
+                    .then(pageLoaded)
+                    .catch(reject);
+                } else {
+                  resolve(users);
+                }
+              };
+
+              web.conversations.members({ channel: conversationId, limit })
+                .then(pageLoaded)
+                .catch(reject);
+            });
+        },
+        web: web,
+        slackbotid: 'UBU3TL8P3'
+    }
