@@ -156,14 +156,38 @@ module.exports = function(controller) {
     });
 
 
+    var paying_group = []
+    var payments = {}
     controller.on('interactive_message_callback', function(bot, message) {
 
         console.log("TESTING")
         console.log(message)
 
         if (message.original_message.text == 'Your receipt has been processed!') {
-            selected = message.actions[0].selected_options[0].value
-            bot.reply(message, 'You added <@' + selected + '>' )
+            userID = message.user
+
+            // GET ITEMS HERE
+            //TODO
+
+            if ('selected_options' in message.actions[0]) {
+                selected = message.actions[0].selected_options[0].value
+                bot.reply(message, '<@' + userID + '> selected ' + selected)
+                if (userID in payments) {
+                    console.log(selected)
+                    payments[userID].push(selected)
+                }
+                else {
+                    payments[userID] = [selected]
+                }
+            }
+            // Completed
+            else {
+                console.log("completed")
+                console.log(payments)
+                bot.reply(message, 'pay up')
+                payments = {}
+
+            }
 
         }
         else if  (message.original_message.text == '') {
@@ -185,10 +209,61 @@ module.exports = function(controller) {
             if ('selected_options' in message.actions[0]) {
                 selected = message.actions[0].selected_options[0].value
                 bot.reply(message, 'You added <@' + selected + '>' )
+                paying_group.push(selected)
             }
             // Completed
             else {
+                userID = message.user
+                paying_group.push(userID)
                 bot.reply(message, 'I will create a chat for your group!' )
+                bot.api.mpim.open({'users':paying_group.toString()}, function(err, res) {
+                    paying_group = []
+                    // console.log(res)
+                    // console.log(res.group.id)
+                    group_id = res.group.id
+
+                    bot.api.chat.postMessage({'channel':group_id, 'text': ':wave: Hello, it looks like <@'+creator_id+'> picked up the tab for a recent purchase. Please upload the receipt.'}, function(err, res) {
+                        // console.log(res)
+                //         choices = ["x", "y", "z"]
+                //         bot.api.chat.postMessage(
+                //             {
+                //                 'channel':group_id,
+                //                 'text': '',
+                //                 "attachments": [
+                // {
+                //     "type": "interactive_message",
+                //     "text": ":ballot_box_with_check:  Please select the item that belongs to you:",
+                //     "fallback": "Let me know who you split the bill with",
+                //     "attachment_type": "default",
+                //     "callback_id": "select_simple_1234",
+                //     "actions": [
+                //             {
+                //                 "name": "games_list",
+                //                 "text": "Pick a game...",
+                //                 "type": "select",
+                //                 "options": [
+                //                     {
+                //                         "text": "Chess",
+                //                         "value": "chess"
+                //                     },
+                //                     {
+                //                         "text": "Falken's Maze",
+                //                         "value": "maze"
+                //                     },
+                //                     {
+                //                         "text": "Global Thermonuclear War",
+                //                         "value": "war"
+                //                     }
+                //                 ]
+                //             }
+                //         ]
+                // }]
+                //             }, function(err, res) {
+                //             // console.log(res)
+                //             paying_group = []
+                //         })
+                    })
+                })
             }
             // bot.reply(message, 'You added <@' + selected + '>' )
         }
@@ -238,17 +313,30 @@ controller.on('file_share', function(bot, message) {
         text: 'Your receipt has been processed!',
         attachments: [
           {
-            "text": "Who are you splitting the bill with?",
-            "fallback": "Let me know who you split the bill with",
+            "text": "Please claim your items",
+            "fallback": "Please claim your items",
             "color": "#3AA3E3",
             "attachment_type": "default",
             "callback_id": "select_simple_1234",
             "actions": [
                 {
                     "name": "participants",
-                    "text": "Who are the participants?",
+                    "text": "Select your items",
                     "type": "select",
                     "data_source": "users"
+              }
+          ]
+      },
+      {
+          "fallback": "You should be able to finish adding process",
+          "callback_id": "is_done",
+          "attachment_type": "default",
+          "actions": [
+              {
+                  "name": "add_person",
+                  "text": "Every item is claimed",
+                  "type": "button",
+                  "value": "done"
               }
           ]
       }
