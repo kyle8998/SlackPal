@@ -86,7 +86,7 @@
    *                             from the REST API call, or to display the error message if there was
    *                             an error.
    */
-  function ReadOcrImage(sourceImageUrl, responseTextArea) {
+  function ReadOcrImage(sourceImageUrl) {
       // Request parameters.
       var params = {
           "language": "unk",
@@ -172,7 +172,7 @@
           }
 
           words = pair_name_and_value(words);
-          responseTextArea.val(JSON.stringify(words, null, 2))
+          return words;
       })
 
       .fail(function(jqXHR, textStatus, errorThrown) {
