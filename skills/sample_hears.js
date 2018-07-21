@@ -307,7 +307,14 @@ controller.on('file_share', function(bot, message) {
     console.log("sharing file")
 
     // check message.actions and message.callback_id to see what action to take...
-    var url = message.file.url_private;
+    var url = message.file.permalink_public
+    console.log(message.file.permalink_public)
+    // var file_id = message.file.id
+    // bot.api.files.sharedPublicURL({'file': file_id}, function(err, res) {
+    //     console.log("public")
+    //     console.log(res)
+    //
+    // })
 
     bot.reply(message, {
         text: 'Your receipt has been processed!',
