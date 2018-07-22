@@ -1,9 +1,10 @@
 
 <h1 align="center">SlackPal </h1>
-<p align="center">Save the hassle of splitting the bill in your workspace</p>
+<p align="center"><i>Slackathon 2018</i></p>
 <p align="center">
   <img src="https://github.com/kyle8998/SlackPal/blob/master/assets/slackpal.png?raw=true" width="200" height="200" >
 </p>
+<p align="center">Save the hassle of splitting the bill in your workspace</p>
 
 ## Introduction
 👋Hello, I’m your SlackPal! 👋
