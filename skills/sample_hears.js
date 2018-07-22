@@ -12,7 +12,23 @@ respond immediately with a single line response.
 // require('../server.js').getusers()
 // web = require('../server.js').web
 
+var itemDict = {
+  "ZUCHINNI GREEN" : 4.66,
+  "BANANA CAVENDISH" : 1.32,
+  "POTATOES BRUSHED" : 3.97,
+  "BROCCOLI" : 4.84,
+  "BRUSSEL SPROUTS" :  5.15,
+  "GRAPES GREEN" : 7.03,
+  "PEAS SNOW" : 3.27,
+  "TOMATOES GRAPE" : 2.99,
+  "LETTUCE ICEBERG" : 2.49
+}
+var items = ["ZUCHINNI GREEN", "BANANA CAVENDISH", "POTATOES BRUSHED", "BROCCOLI", "BRUSSEL SPROUTS", "GRAPES GREEN", "PEAS SNOW", "TOMATOES GRAPE", "LETTUCE ICEBERG"]
+var prices = [4.66, 1.32, 3.97, 4.84, 5.15, 7.03, 3.27, 2.99, 2.49]
+
 module.exports = function(controller) {
+
+
 
     controller.hears(['^hello$'], 'direct_message,direct_mention', function(bot, message) {
         console.log(message)
@@ -155,19 +171,19 @@ module.exports = function(controller) {
         bot.reply(message, "ok opening chat")
     });
 
-    var itemDict = {
-      "ZUCHINNI GREEN" : 4.66,
-      "BANANA CAVENDISH" : 1.32,
-      "POTATOES BRUSHED" : 3.97,
-      "BROCCOLI" = 4.84,
-      "BRUSSEL SPROUTS" = 5.15,
-      "GRAPES GREEN" = 7.03,
-      "PEAS SNOW" = 3.27,
-      "TOMATOES GRAPE" : 2.99,
-      "LETTUCE ICEBERG" : 2.49
-    }
-    var items = ["ZUCHINNI GREEN", "BANANA CAVENDISH", "POTATOES BRUSHED", "BROCCOLI", "BRUSSEL SPROUTS", "GRAPES GREEN", "PEAS SNOW", "TOMATOES GRAPE", "LETTUCE ICEBERG"]
-    var prices = [4.66, 1.32, 3.97, 4.84, 5.15, 7.03, 3.27, 2.99, 2.49]
+    // var itemDict = {
+    //   "ZUCHINNI GREEN" : 4.66,
+    //   "BANANA CAVENDISH" : 1.32,
+    //   "POTATOES BRUSHED" : 3.97,
+    //   "BROCCOLI" : 4.84,
+    //   "BRUSSEL SPROUTS" :  5.15,
+    //   "GRAPES GREEN" : 7.03,
+    //   "PEAS SNOW" : 3.27,
+    //   "TOMATOES GRAPE" : 2.99,
+    //   "LETTUCE ICEBERG" : 2.49
+    // }
+    // var items = ["ZUCHINNI GREEN", "BANANA CAVENDISH", "POTATOES BRUSHED", "BROCCOLI", "BRUSSEL SPROUTS", "GRAPES GREEN", "PEAS SNOW", "TOMATOES GRAPE", "LETTUCE ICEBERG"]
+    // var prices = [4.66, 1.32, 3.97, 4.84, 5.15, 7.03, 3.27, 2.99, 2.49]
     var paying_group = []
     var payments = {}
     controller.on('interactive_message_callback', function(bot, message) {
@@ -196,7 +212,11 @@ module.exports = function(controller) {
             else {
                 console.log("completed")
                 console.log(payments)
-                bot.reply(message, 'Great! Here is the final breakdown')
+                bot.reply(message, ':tada: :tada: :tada: Great! Here is the final breakdown :tada: :tada: :tada:')
+
+                for (var user of Object.keys(payments)) {
+                    bot.reply(message, 'user <@' + user + '> has chosen '+payments[user].toString())
+                }
                 // payments = {}
 
             }
@@ -328,6 +348,9 @@ controller.on('file_share', function(bot, message) {
     //
     // })
 
+    console.log("FGAREGAESRGXFGR")
+    console.log(items)
+    // console.log(users)
     bot.reply(message, {
         text: 'Your receipt has been processed!',
         attachments: [
@@ -338,13 +361,51 @@ controller.on('file_share', function(bot, message) {
             "attachment_type": "default",
             "callback_id": "select_simple_1234",
             "actions": [
-                {
-                    "name": "participants",
-                    "text": "Select your items",
-                    "type": "select",
-                    "data_source": "Object.keys(itemDict)"
-              }
-          ]
+                    {
+                        "name": "items",
+                        "text": "Claim your items",
+                        "type": "select",
+                        "options": [
+                            {
+                                "text": "ZUCHINNI GREEN",
+                                "value": "ZUCHINNI GREEN for 4.66"
+                            },
+                            {
+                                "text": "BANANA CAVENDISH",
+                                "value": "BANANA CAVENDISH for 1.32"
+                            },
+                            {
+                                "text": "POTATOES BRUSHED",
+                                "value": "POTATOES BRUSHED for 3.97"
+                            },
+                            {
+                                "text": "BROCCOLI",
+                                "value": "BROCCOLI for 4.84"
+                            },
+                            {
+                                "text": "BRUSSEL SPROUTS",
+                                "value": "BRUSSEL SPROUTS for 5.15"
+                            },
+                            {
+                                "text": "GRAPES GREEN",
+                                "value": "GRAPES GREEN for 7.03"
+                            },
+                            {
+                                "text": "PEAS SNOW",
+                                "value": "PEAS SNOW for 3.27"
+                            },
+                            {
+                                "text": "TOMATOES GRAPE",
+                                "value": "TOMATOES GRAPE for 2.99"
+                            },
+                            {
+                                "text": "LETTUCE ICEBERG",
+                                "value": "LETTUCE ICEBERG for 2.49"
+                            }
+
+                        ]
+                    }
+                ]
       },
       {
           "fallback": "You should be able to finish adding process",
