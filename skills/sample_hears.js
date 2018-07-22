@@ -12,6 +12,10 @@ respond immediately with a single line response.
 // require('../server.js').getusers()
 // web = require('../server.js').web
 
+const myModule = require('./connect');
+const myfunc = myModule.ReadOcrImage;  
+
+
 module.exports = function(controller) {
 
     controller.hears(['^hello$'], 'direct_message,direct_mention', function(bot, message) {
