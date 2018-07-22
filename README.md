@@ -1,3 +1,3 @@
 # SlackPal
 
-A slack bot for lunch transactions!
+A slack bot for any transactions!
