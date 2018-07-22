@@ -155,7 +155,19 @@ module.exports = function(controller) {
         bot.reply(message, "ok opening chat")
     });
 
-
+    var itemDict = {
+      "ZUCHINNI GREEN" : 4.66,
+      "BANANA CAVENDISH" : 1.32,
+      "POTATOES BRUSHED" : 3.97,
+      "BROCCOLI" = 4.84,
+      "BRUSSEL SPROUTS" = 5.15,
+      "GRAPES GREEN" = 7.03,
+      "PEAS SNOW" = 3.27,
+      "TOMATOES GRAPE" : 2.99,
+      "LETTUCE ICEBERG" : 2.49
+    }
+    var items = ["ZUCHINNI GREEN", "BANANA CAVENDISH", "POTATOES BRUSHED", "BROCCOLI", "BRUSSEL SPROUTS", "GRAPES GREEN", "PEAS SNOW", "TOMATOES GRAPE", "LETTUCE ICEBERG"]
+    var prices = [4.66, 1.32, 3.97, 4.84, 5.15, 7.03, 3.27, 2.99, 2.49]
     var paying_group = []
     var payments = {}
     controller.on('interactive_message_callback', function(bot, message) {
@@ -171,7 +183,7 @@ module.exports = function(controller) {
 
             if ('selected_options' in message.actions[0]) {
                 selected = message.actions[0].selected_options[0].value
-                bot.reply(message, '<@' + userID + '> selected ' + selected)
+                bot.reply(message, '<@' + userID + '> claimed ' + selected)
                 if (userID in payments) {
                     console.log(selected)
                     payments[userID].push(selected)
@@ -184,8 +196,8 @@ module.exports = function(controller) {
             else {
                 console.log("completed")
                 console.log(payments)
-                bot.reply(message, 'pay up')
-                payments = {}
+                bot.reply(message, 'Great! Here is the final breakdown')
+                // payments = {}
 
             }
 
@@ -330,7 +342,7 @@ controller.on('file_share', function(bot, message) {
                     "name": "participants",
                     "text": "Select your items",
                     "type": "select",
-                    "data_source": "users"
+                    "data_source": "Object.keys(itemDict)"
               }
           ]
       },
