@@ -33,3 +33,13 @@ split bill
 <p align="center">
   <img src="https://github.com/kyle8998/SlackPal/blob/master/assets/command.png?raw=true" height="200" >
 </p>
+
+## Demos
+
+<p align="center">
+  <img src="https://github.com/kyle8998/SlackPal/blob/master/assets/split%20bill%20ex.gif?raw=true" height="400" >
+</p>
+
+<p align="center">
+  <img src="https://github.com/kyle8998/SlackPal/blob/master/assets/items%20choice%20ex.gif?raw=true" height="400" >
+</p>
